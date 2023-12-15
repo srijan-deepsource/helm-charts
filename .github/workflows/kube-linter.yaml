@@ -10,7 +10,7 @@ on:
 jobs:
   scan:
   # Run tests only if this a push the default branch, or if the pr has a label "ready-to-test"
-    if: ${{ github.ref == 'refs/heads/master' || contains(github.event.issue.labels.*.name, 'ready-to-test') }}
+    if: ${{ github.ref == 'refs/heads/master' || github.event.label.name == 'ready-to-test' }}
 
     strategy:
       matrix:
