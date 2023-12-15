@@ -42,18 +42,10 @@ jobs:
 
       - name: Upload SARIF report files to DeepSource
         run: |
-          # # Download the DeepSource CLI, based on the OS
-          # if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          #   # make a directory `bin` in the current directory
-          #   mkdir bin
-          #   Invoke-WebRequest -Uri https://deepsource.io/cli -OutFile bin/deepsource
-          #   # make the downloaded file executable
-          #   Set-ItemProperty -Path bin/deepsource -Name IsExecutable -Value $true
-          # else
-          #   curl https://deepsource.io/cli | sh
-
-          # fi
-          curl https://deepsource.io/cli | sh
+          # DeepSource CLI doesn't work for windows yet
+          if [[ "${{ matrix.os }}" != "windows-latest" ]]; then
+            curl https://deepsource.io/cli | sh
+          fi
           # report the coverage to DeepSource
           ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file ./README.md
         shell: bash
