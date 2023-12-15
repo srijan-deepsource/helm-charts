@@ -9,7 +9,14 @@ on:
 
 jobs:
   scan:
-    runs-on: [ self-hosted, charmander ]
+  # Run tests only if this a push the default branch, or if the pr has a label "ready-to-test"
+    if: ${{ github.ref == 'refs/heads/master' || contains(github.event.issue.labels.*.name, 'ready-to-test') }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
     env:
         DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
     steps:
@@ -35,12 +42,22 @@ jobs:
 
       - name: Upload SARIF report files to DeepSource
         run: |
-          # Install the CLI
-          curl https://deepsource.io/cli | sh
+          # Download the DeepSource CLI, based on the OS
+          if [ ${{ matrix.os }} == 'ubuntu-latest' ]; then
+            curl https://deepsource.io/cli | sh
+          elif [ ${{ matrix.os }} == 'macos-latest' ]; then
+            curl https://deepsource.io/cli | sh
+          elif [ ${{ matrix.os }} == 'windows-latest' ]; then
+            # make a directory `bin` in the current directory
+            mkdir bin
+            Invoke-WebRequest -Uri https://deepsource.io/cli -OutFile bin/deepsource
+            # make the downloaded file executable
+            Set-ItemProperty -Path bin/deepsource -Name IsExecutable -Value $true
 
-          # Send the report to DeepSource
+          fi
+          # report the coverage to DeepSource
           ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file ./kube-linter.sarif
-
+          
       # Ensure the workflow eventually fails if files did not pass kube-linter checks.
       - name: Verify kube-linter-action succeeded
         shell: bash
