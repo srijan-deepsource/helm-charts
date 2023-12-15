@@ -45,9 +45,9 @@ jobs:
           # DeepSource CLI doesn't work for windows yet
           if [[ "${{ matrix.os }}" != "windows-latest" ]]; then
             curl https://deepsource.io/cli | sh
+            # report the coverage to DeepSource
+            ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file ./README.md
           fi
-          # report the coverage to DeepSource
-          ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file ./README.md
         shell: bash
           
       # Ensure the workflow eventually fails if files did not pass kube-linter checks.
