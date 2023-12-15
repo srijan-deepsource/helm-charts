@@ -54,7 +54,7 @@ jobs:
 
           fi
           # report the coverage to DeepSource
-          ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file kube-linter.sarif
+          ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file ./README.md
           
       # Ensure the workflow eventually fails if files did not pass kube-linter checks.
       - name: Verify kube-linter-action succeeded
