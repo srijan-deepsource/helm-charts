@@ -46,7 +46,7 @@ jobs:
           if [[ "${{ matrix.os }}" != "windows-latest" ]]; then
             curl https://deepsource.io/cli | sh
             # report the coverage to DeepSource
-            ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file ./README.md
+            ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file ./kube-linter.sarif
           fi
         shell: bash
           
