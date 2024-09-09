@@ -19,6 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
         DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+        DEEPSOURCE_DSN_DEV: ${{ secrets.DEEPSOURCE_DSN_DEV }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -47,6 +48,10 @@ jobs:
             curl https://deepsource.io/cli | sh
             # report the coverage to DeepSource
             ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file ./kube-linter.sarif
+
+            # report coverate to DeepSource Dev
+            DEEPSOURCE_DSN=$DEEPSOURCE_DSN_DEV ./bin/deepsource report --analyzer kube-linter --analyzer-type community --value-file ./kube-linter.sarif
+            
           fi
         shell: bash
           
