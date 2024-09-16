@@ -7,6 +7,7 @@ set -o pipefail
 main() {
     local repo_root
     repo_root=$(git rev-parse --show-toplevel)
+    
 
     local changed
     changed=$(ct list-changed --config "$repo_root/ct.yaml")
